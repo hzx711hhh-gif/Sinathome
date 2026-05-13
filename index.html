@@ -475,7 +475,7 @@
           <option value="female">女</option>
         </select>
       </div>
-      <button type="button" class="btn-submit" onclick="calcSingle()">排 盘</button>
+      <button type="button" class="btn-submit" id="btn-single">排 盘</button>
     </div>
   </div>
 
@@ -510,7 +510,7 @@
       </div>
     </div>
     <div style="text-align:center;margin-top:18px;">
-      <button type="button" class="btn-submit" onclick="calcMarriage()">合 婚 分 析</button>
+      <button type="button" class="btn-submit" id="btn-marriage">合 婚 分 析</button>
     </div>
   </div>
 
@@ -662,12 +662,19 @@ document.getElementById('ma-month').addEventListener('change', function() { upda
 document.getElementById('mb-year').addEventListener('change', function() { updateDaySelect('mb'); });
 document.getElementById('mb-month').addEventListener('change', function() { updateDaySelect('mb'); });
 
-// Diagnostic: verify init completed
-console.log('八字排盘页面初始化完成');
-console.log('s-year 选项数:', document.getElementById('s-year').options.length);
-console.log('s-month 选项数:', document.getElementById('s-month').options.length);
-console.log('s-day 选项数:', document.getElementById('s-day').options.length);
-console.log('s-hour 选项数:', document.getElementById('s-hour').options.length);
+// Attach button handlers via addEventListener (more robust than inline onclick)
+document.getElementById('btn-single').addEventListener('click', calcSingle);
+document.getElementById('btn-marriage').addEventListener('click', calcMarriage);
+
+// Visible diagnostic: show ready status in footer
+(function() {
+  var f = document.querySelector('.footer');
+  if (f) f.innerHTML = 'JS已就绪 | 年选项:' + document.getElementById('s-year').options.length
+    + ' 月选项:' + document.getElementById('s-month').options.length
+    + ' 日选项:' + document.getElementById('s-day').options.length
+    + ' 时选项:' + document.getElementById('s-hour').options.length
+    + '<br>本页内容仅供娱乐消遣，切勿迷信';
+})();
 
 // ==================== MODE SWITCH ====================
 
