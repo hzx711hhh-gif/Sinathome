@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>八字命理 · 排盘合婚</title>
+<style>
+  :root {
+    --bg: #F5F0E8;
+    --gold: #C9A96E;
+    --red: #8B0000;
+    --dark: #2C1810;
+    --paper: #FAF7F2;
+    --border: #D4C5A9;
+    --text: #3C2415;
+    --accent: #B8860B;
+    --wood: #4A7C59;
+    --fire: #C0392B;
+    --earth: #D4A017;
+    --metal: #C9A96E;
+    --water: #2980B9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Noto Serif SC", "STSong", "SimSun", "KaiTi", "楷体", serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(201,169,110,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(139,0,0,0.05) 0%, transparent 50%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 30px 20px 20px;
+    position: relative;
+  }
+  .header h1 {
+    font-size: 2.2em;
+    color: var(--red);
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(139,0,0,0.15);
+  }
+  .header .subtitle {
+    font-size: 0.95em;
+    color: var(--accent);
+    margin-top: 6px;
+    letter-spacing: 0.2em;
+  }
+  .header::after {
+    content: '';
+    display: block;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 14px auto 0;
+  }
+
+  /* Tab Switch */
+  .tab-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 20px 0;
+  }
+  .tab-btn {
+    padding: 10px 36px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1.05em;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.25s;
+  }
+  .tab-btn:first-child { border-radius: 6px 0 0 6px; }
+  .tab-btn:last-child { border-radius: 0 6px 6px 0; }
+  .tab-btn.active {
+    background: var(--red);
+    color: #FFF;
+    border-color: var(--red);
+  }
+
+  /* Card */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(44,24,16,0.06);
+    position: relative;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20px; right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,110,0.3), transparent);
+  }
+  .card-title {
+    font-size: 1.15em;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--border);
+    text-align: center;
+  }
+
+  /* Form */
+  .form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .form-group label {
+    font-size: 0.85em;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .form-group select, .form-group input {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #FFF;
+    font-family: inherit;
+    font-size: 0.95em;
+    color: var(--text);
+    min-width: 80px;
+    cursor: pointer;
+  }
+  .form-group select:focus { outline: 2px solid var(--gold); }
+
+  .btn-submit {
+    padding: 10px 40px;
+    background: var(--red);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1.05em;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn-submit:hover { background: #A52A2A; }
+
+  /* Marriage double form */
+  .double-form {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .double-form .person-form {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    background: #FFF;
+  }
+  .double-form .person-form h3 {
+    text-align: center;
+    color: var(--red);
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .double-form .person-form h3.female { color: #C0392B; }
+
+  .middle-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 40px;
+  }
+  .middle-line .thread {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(180deg, var(--red), var(--gold), var(--red));
+  }
+  .middle-line .heart {
+    color: var(--red);
+    font-size: 1.5em;
+  }
+
+  /* Result Area */
+  #result-area { display: none; }
+
+  /* BaZi Grid */
+  .bazi-table {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .bazi-cell {
+    border: 2px solid var(--dark);
+    border-radius: 4px;
+    background: #FFFEF9;
+    padding: 6px 0;
+  }
+  .bazi-cell .pillar-label {
+    font-size: 0.75em;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .bazi-cell .stem {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--dark);
+    padding: 2px 0;
+  }
+  .bazi-cell .branch {
+    font-size: 1.2em;
+    color: var(--text);
+    border-top: 1px dashed var(--border);
+    padding-top: 2px;
+  }
+
+  /* Five Elements */
+  .wuxing-bars {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 14px 0;
+  }
+  .wuxing-item {
+    text-align: center;
+    min-width: 55px;
+  }
+  .wuxing-item .bar-label {
+    font-size: 0.85em;
+    font-weight: 700;
+  }
+  .wuxing-item .bar-track {
+    width: 40px;
+    height: 100px;
+    background: #E8E0D5;
+    border-radius: 4px;
+    margin: 4px auto;
+    position: relative;
+    overflow: hidden;
+  }
+  .wuxing-item .bar-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-radius: 4px;
+    transition: height 0.6s ease;
+  }
+  .wuxing-item .bar-count {
+    font-size: 0.8em;
+    color: var(--accent);
+  }
+  .wood-color { background: var(--wood); }
+  .fire-color { background: var(--fire); }
+  .earth-color { background: var(--earth); }
+  .metal-color { background: var(--metal); }
+  .water-color { background: var(--water); }
+
+  /* Analysis Text */
+  .analysis-block {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: #FFFEF9;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.95em;
+    line-height: 1.8;
+  }
+
+  /* Compatibility */
+  .score-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid var(--red);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    background: #FFFEF9;
+  }
+  .score-circle .score-num {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--red);
+  }
+  .score-circle .score-label {
+    font-size: 0.7em;
+    color: var(--accent);
+  }
+
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .comp-item {
+    padding: 10px 14px;
+    background: #FFFEF9;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .comp-item .comp-label { font-size: 0.85em; color: var(--accent); }
+  .comp-good { color: #27AE60; font-weight: 700; }
+  .comp-bad { color: #C0392B; font-weight: 700; }
+  .comp-neutral { color: var(--accent); font-weight: 700; }
+
+  /* Zodiac */
+  .zodiac-block {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 14px 0;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #FFFEF9 0%, #F5EDE0 100%);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .zodiac-icon {
+    font-size: 2.4em;
+    line-height: 1;
+  }
+  .zodiac-info { flex: 1; }
+  .zodiac-info .zodiac-name {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .zodiac-info .zodiac-meta {
+    font-size: 0.8em;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+  .zodiac-info .zodiac-trait {
+    font-size: 0.9em;
+    color: var(--text);
+    margin-top: 6px;
+    line-height: 1.7;
+  }
+  .zodiac-element-tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 0.75em;
+    font-weight: 700;
+    margin-right: 6px;
+    color: #FFF;
+  }
+  .el-fire { background: #C0392B; }
+  .el-earth { background: #8B6914; }
+  .el-air { background: #7FB3D8; color: #2C3E50; }
+  .el-water { background: #2980B9; }
+
+  .comp-detail {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: #FFFEF9;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    font-size: 0.9em;
+    line-height: 1.8;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    margin: 0 2px;
+    font-weight: 700;
+  }
+  .badge-good { background: #D5F5E3; color: #1E8449; }
+  .badge-bad { background: #FADBD8; color: #922B21; }
+  .badge-warn { background: #FCF3CF; color: #7D6608; }
+
+  .footer {
+    text-align: center;
+    color: #B0A090;
+    font-size: 0.8em;
+    margin-top: 30px;
+    padding: 16px 0;
+    letter-spacing: 0.05em;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .double-form {
+      grid-template-columns: 1fr;
+    }
+    .middle-line {
+      flex-direction: row;
+      padding-top: 0;
+    }
+    .middle-line .thread {
+      width: 60px;
+      height: 2px;
+    }
+    .bazi-table { grid-template-columns: repeat(4, 1fr); gap: 4px; }
+    .bazi-cell .stem { font-size: 1.2em; }
+    .bazi-cell .branch { font-size: 1em; }
+    .header h1 { font-size: 1.5em; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>八字命理</h1>
+    <div class="subtitle">— 排盘 · 合婚 —</div>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchMode('single')">单人排盘</button>
+    <button class="tab-btn" onclick="switchMode('marriage')">双人合婚</button>
+  </div>
+
+  <!-- Single Mode Form -->
+  <div class="card" id="form-single">
+    <div class="card-title">请输入出生信息</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>姓名</label>
+        <input type="text" id="s-name" placeholder="可选" maxlength="10" style="width:100px">
+      </div>
+      <div class="form-group">
+        <label>出生年份</label>
+        <select id="s-year"></select>
+      </div>
+      <div class="form-group">
+        <label>月份</label>
+        <select id="s-month"></select>
+      </div>
+      <div class="form-group">
+        <label>日期</label>
+        <select id="s-day"></select>
+      </div>
+      <div class="form-group">
+        <label>时辰</label>
+        <select id="s-hour"></select>
+      </div>
+      <div class="form-group">
+        <label>性别</label>
+        <select id="s-gender">
+          <option value="male">男</option>
+          <option value="female">女</option>
+        </select>
+      </div>
+      <button class="btn-submit" onclick="calcSingle()">排 盘</button>
+    </div>
+  </div>
+
+  <!-- Marriage Mode Form -->
+  <div class="card" id="form-marriage" style="display:none;">
+    <div class="card-title">请输入双方出生信息</div>
+    <div class="double-form">
+      <div class="person-form" id="person-a">
+        <h3>甲方（男方）</h3>
+        <div class="form-row">
+          <div class="form-group"><label>姓名</label><input type="text" id="ma-name" placeholder="可选" maxlength="10" style="width:90px"></div>
+          <div class="form-group"><label>年份</label><select id="ma-year"></select></div>
+          <div class="form-group"><label>月份</label><select id="ma-month"></select></div>
+          <div class="form-group"><label>日期</label><select id="ma-day"></select></div>
+          <div class="form-group"><label>时辰</label><select id="ma-hour"></select></div>
+        </div>
+      </div>
+      <div class="middle-line">
+        <div class="thread"></div>
+        <div class="heart">&#x2764;</div>
+        <div class="thread"></div>
+      </div>
+      <div class="person-form" id="person-b">
+        <h3 class="female">乙方（女方）</h3>
+        <div class="form-row">
+          <div class="form-group"><label>姓名</label><input type="text" id="mb-name" placeholder="可选" maxlength="10" style="width:90px"></div>
+          <div class="form-group"><label>年份</label><select id="mb-year"></select></div>
+          <div class="form-group"><label>月份</label><select id="mb-month"></select></div>
+          <div class="form-group"><label>日期</label><select id="mb-day"></select></div>
+          <div class="form-group"><label>时辰</label><select id="mb-hour"></select></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:18px;">
+      <button class="btn-submit" onclick="calcMarriage()">合 婚 分 析</button>
+    </div>
+  </div>
+
+  <!-- Result Area -->
+  <div id="result-area"></div>
+
+  <div class="footer">
+    本页内容仅供娱乐消遣，切勿迷信
+  </div>
+</div>
+
+<script>
+// ==================== DATA ====================
+
+const HEAVENLY_STEMS = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const EARTHLY_BRANCHES = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const ZODIAC = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+const WUXING_MAP = ['木','木','火','火','土','土','金','金','水','水'];
+const BRANCH_WUXING = ['水','土','木','木','土','火','火','土','金','金','土','水'];
+
+const STEM_ELEMENTS = {
+  '甲':'wood','乙':'wood','丙':'fire','丁':'fire','戊':'earth',
+  '己':'earth','庚':'metal','辛':'metal','壬':'water','癸':'water'
+};
+const BRANCH_ELEMENTS = {
+  '子':'water','丑':'earth','寅':'wood','卯':'wood','辰':'earth','巳':'fire',
+  '午':'fire','未':'earth','申':'metal','酉':'metal','戌':'earth','亥':'water'
+};
+
+const HOUR_NAMES = [
+  '子时 (23-01)','丑时 (01-03)','寅时 (03-05)','卯时 (05-07)',
+  '辰时 (07-09)','巳时 (09-11)','午时 (11-13)','未时 (13-15)',
+  '申时 (15-17)','酉时 (17-19)','戌时 (19-21)','亥时 (21-23)'
+];
+
+const ZODIAC_SIGNS = [
+  { name: '摩羯座', en: 'Capricorn', emoji: '♑', element: 'earth', quality: 'cardinal', start: [12,22], end: [1,19],
+    trait: '踏实稳重，有强烈的责任感和事业心。做事脚踏实地，耐力惊人，是典型的实干家。外表冷静，内心却有宏大的理想。' },
+  { name: '水瓶座', en: 'Aquarius', emoji: '♒', element: 'air', quality: 'fixed', start: [1,20], end: [2,18],
+    trait: '思想前卫，特立独行，富有创新精神。重视自由与独立，不喜欢被约束。对人友善但有距离感，思维跳跃令人捉摸不定。' },
+  { name: '双鱼座', en: 'Pisces', emoji: '♓', element: 'water', quality: 'mutable', start: [2,19], end: [3,20],
+    trait: '温柔善良，富有同情心和想象力。艺术气息浓厚，直觉敏锐。情感丰富易感伤，是浪漫的理想主义者。' },
+  { name: '白羊座', en: 'Aries', emoji: '♈', element: 'fire', quality: 'cardinal', start: [3,21], end: [4,19],
+    trait: '热情勇敢，充满活力与冲劲。做事直截了当，行动力极强。性格坦率天真，偶尔急躁冲动，是永不言败的开拓者。' },
+  { name: '金牛座', en: 'Taurus', emoji: '♉', element: 'earth', quality: 'fixed', start: [4,20], end: [5,20],
+    trait: '稳重踏实，耐心十足，对美的事物有独到品味。重视物质安全感，固执但可靠。一旦认定目标就不轻易放弃。' },
+  { name: '双子座', en: 'Gemini', emoji: '♊', element: 'air', quality: 'mutable', start: [5,21], end: [6,21],
+    trait: '机智灵活，好奇心旺盛，善于沟通表达。头脑转得快，兴趣广泛但容易三分钟热度。双重性格令人难以捉摸。' },
+  { name: '巨蟹座', en: 'Cancer', emoji: '♋', element: 'water', quality: 'cardinal', start: [6,22], end: [7,22],
+    trait: '温柔体贴，家庭观念极重，情感细腻而敏感。保护欲强，对亲近的人无微不至。内心柔软，容易受伤害但也最懂得照顾人。' },
+  { name: '狮子座', en: 'Leo', emoji: '♌', element: 'fire', quality: 'fixed', start: [7,23], end: [8,22],
+    trait: '自信大方，天生具有领导气质和舞台魅力。热情慷慨，喜欢被关注和赞美。自尊心强，内心渴望成为众人瞩目的焦点。' },
+  { name: '处女座', en: 'Virgo', emoji: '♍', element: 'earth', quality: 'mutable', start: [8,23], end: [9,22],
+    trait: '细致认真，追求完美，逻辑分析能力出众。做事一丝不苟，注重细节。外表谦逊内心骄傲，是可靠的完美主义者。' },
+  { name: '天秤座', en: 'Libra', emoji: '♎', element: 'air', quality: 'cardinal', start: [9,23], end: [10,23],
+    trait: '优雅温和，追求和谐与公平，社交能力卓越。审美品味极佳，但优柔寡断。重视人际关系，是天生和平使者。' },
+  { name: '天蝎座', en: 'Scorpio', emoji: '♏', element: 'water', quality: 'fixed', start: [10,24], end: [11,22],
+    trait: '深沉内敛，意志力极强，洞察力锐利。爱恨分明，情感浓烈而专一。表面平静如水，内心波涛汹涌，是极具魅力的神秘主义者。' },
+  { name: '射手座', en: 'Sagittarius', emoji: '♐', element: 'fire', quality: 'mutable', start: [11,23], end: [12,21],
+    trait: '乐观开朗，热爱自由与冒险，是天生的旅行家。坦率真诚，不拘小节。追求精神成长，讨厌束缚，永远心怀远方。' }
+];
+
+const ZODIAC_ELEMENTS = { fire: '火象', earth: '土象', air: '风象', water: '水象' };
+const ZODIAC_QUALITIES = { cardinal: '基本宮', fixed: '固定宮', mutable: '变动宮' };
+
+const PILLAR_NAMES = ['年柱','月柱','日柱','时柱'];
+
+// ==================== INIT FORM OPTIONS ====================
+
+function initYearSelect(prefix) {
+  var sel = document.getElementById(prefix + '-year');
+  sel.innerHTML = '';
+  var now = new Date();
+  var currentYear = now.getFullYear();
+  for (var y = currentYear; y >= 1930; y--) {
+    var opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y + '年';
+    sel.appendChild(opt);
+  }
+}
+
+function initMonthSelect(prefix) {
+  var sel = document.getElementById(prefix + '-month');
+  sel.innerHTML = '';
+  for (var m = 1; m <= 12; m++) {
+    var opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = m + '月';
+    sel.appendChild(opt);
+  }
+}
+
+function updateDaySelect(prefix) {
+  var year = parseInt(document.getElementById(prefix + '-year').value);
+  var month = parseInt(document.getElementById(prefix + '-month').value);
+  var sel = document.getElementById(prefix + '-day');
+  var prevVal = sel.value;
+  sel.innerHTML = '';
+  var daysInMonth = new Date(year, month, 0).getDate();
+  for (var d = 1; d <= daysInMonth; d++) {
+    var opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d + '日';
+    sel.appendChild(opt);
+  }
+  if (prevVal && parseInt(prevVal) <= daysInMonth) sel.value = prevVal;
+}
+
+function initHourSelect(prefix) {
+  var sel = document.getElementById(prefix + '-hour');
+  sel.innerHTML = '';
+  for (var h = 0; h < 12; h++) {
+    var opt = document.createElement('option');
+    opt.value = h;
+    opt.textContent = HOUR_NAMES[h];
+    sel.appendChild(opt);
+  }
+}
+
+function initAllSelects() {
+  var prefixes = ['s', 'ma', 'mb'];
+  for (var i = 0; i < prefixes.length; i++) {
+    var p = prefixes[i];
+    initYearSelect(p);
+    initMonthSelect(p);
+    updateDaySelect(p);
+    initHourSelect(p);
+  }
+
+  // Set default year/month for month select
+  var now = new Date();
+  ['s','ma','mb'].forEach(function(p) {
+    var ySel = document.getElementById(p + '-year');
+    var mSel = document.getElementById(p + '-month');
+    var hSel = document.getElementById(p + '-hour');
+    if (ySel) ySel.value = 1990;
+    if (mSel) mSel.value = 6;
+    if (hSel) hSel.value = 5; // noon
+  });
+}
+
+// Init selects and attach day update events (script is at end of body, DOM is ready)
+initAllSelects();
+document.getElementById('s-year').addEventListener('change', function() { updateDaySelect('s'); });
+document.getElementById('s-month').addEventListener('change', function() { updateDaySelect('s'); });
+document.getElementById('ma-year').addEventListener('change', function() { updateDaySelect('ma'); });
+document.getElementById('ma-month').addEventListener('change', function() { updateDaySelect('ma'); });
+document.getElementById('mb-year').addEventListener('change', function() { updateDaySelect('mb'); });
+document.getElementById('mb-month').addEventListener('change', function() { updateDaySelect('mb'); });
+
+// ==================== MODE SWITCH ====================
+
+function switchMode(mode) {
+  var btns = document.querySelectorAll('.tab-btn');
+  btns[0].classList.toggle('active', mode === 'single');
+  btns[1].classList.toggle('active', mode === 'marriage');
+  document.getElementById('form-single').style.display = mode === 'single' ? '' : 'none';
+  document.getElementById('form-marriage').style.display = mode === 'marriage' ? '' : 'none';
+  document.getElementById('result-area').style.display = 'none';
+  document.getElementById('result-area').innerHTML = '';
+}
+
+// ==================== CORE CALCULATION ====================
+
+function getYearStemBranch(year, month, day) {
+  var baseYear = 1984; // 甲子年
+  // Check if before 立春 (approx Feb 4)
+  var isBeforeSpring = (month < 2) || (month === 2 && day < 4);
+  var effectiveYear = isBeforeSpring ? year - 1 : year;
+  var diff = effectiveYear - baseYear;
+  var idx = ((diff % 60) + 60) % 60;
+  return { stem: idx % 10, branch: idx % 12 };
+}
+
+function getMonthStemBranch(yearStem, month, day) {
+  // Approx day-of-year for solar term boundaries (non-leap)
+  var monthDays = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+  var solarDOY  = [6, 35, 65, 95, 126, 157, 188, 220, 251, 281, 311, 341];
+  var solarBr   = [1, 2,  3,  4,  5,   6,   7,   8,   9,  10,  11,  0]; // 丑寅卯辰巳午未申酉戌亥子
+
+  var doy = monthDays[month - 1] + day;
+
+  // month branch: find the latest solar term <= doy
+  // (0-based) branchIdx 0=子, 1=丑, 2=寅, ..., 11=亥
+  var branchIdx = 0; // default: 子月 (early Jan before 小寒)
+  for (var i = solarDOY.length - 1; i >= 0; i--) {
+    if (doy >= solarDOY[i]) { branchIdx = solarBr[i]; break; }
+  }
+
+  // 五虎遁 for month stem
+  var monthStemBase;
+  if (yearStem === 0 || yearStem === 5) monthStemBase = 2; // 丙
+  else if (yearStem === 1 || yearStem === 6) monthStemBase = 4; // 戊
+  else if (yearStem === 2 || yearStem === 7) monthStemBase = 6; // 庚
+  else if (yearStem === 3 || yearStem === 8) monthStemBase = 8; // 壬
+  else monthStemBase = 0; // 甲
+
+  // Month stem offset from 寅月
+  var stemIdx = (monthStemBase + (branchIdx - 2 + 12) % 12) % 10;
+
+  return { stem: stemIdx, branch: branchIdx };
+}
+
+function getDayStemBranch(year, month, day) {
+  // Known reference: 1900-01-01 = 甲戌日 (index 10 in 60-day cycle)
+  var refDate = new Date(1900, 0, 1);
+  var targetDate = new Date(year, month - 1, day);
+  var days = Math.floor((targetDate - refDate) / (24 * 60 * 60 * 1000));
+  var idx = ((days + 10) % 60 + 60) % 60;
+  return { stem: idx % 10, branch: idx % 12 };
+}
+
+function getHourStemBranch(dayStem, hourIndex) {
+  // 五鼠遁: 甲己还加甲
+  var hourStemBase;
+  if (dayStem === 0 || dayStem === 5) hourStemBase = 0; // 甲
+  else if (dayStem === 1 || dayStem === 6) hourStemBase = 2; // 丙
+  else if (dayStem === 2 || dayStem === 7) hourStemBase = 4; // 戊
+  else if (dayStem === 3 || dayStem === 8) hourStemBase = 6; // 庚
+  else hourStemBase = 8; // 壬
+
+  var stemIdx = (hourStemBase + hourIndex) % 10;
+  return { stem: stemIdx, branch: hourIndex };
+}
+
+function calculateBaZi(year, month, day, hourIndex) {
+  var yearSB = getYearStemBranch(year, month, day);
+  var monthSB = getMonthStemBranch(yearSB.stem, month, day);
+  var daySB = getDayStemBranch(year, month, day);
+  var hourSB = getHourStemBranch(daySB.stem, hourIndex);
+
+  return {
+    year: yearSB,
+    month: monthSB,
+    day: daySB,
+    hour: hourSB,
+    stems: [yearSB.stem, monthSB.stem, daySB.stem, hourSB.stem],
+    branches: [yearSB.branch, monthSB.branch, daySB.branch, hourSB.branch]
+  };
+}
+
+// ==================== ZODIAC SIGN ====================
+
+function getZodiacSign(month, day) {
+  for (var i = 0; i < ZODIAC_SIGNS.length; i++) {
+    var s = ZODIAC_SIGNS[i];
+    var sm = s.start[0], sd = s.start[1];
+    var em = s.end[0], ed = s.end[1];
+    // Handle wrap-around (e.g. 摩羯 12/22 - 1/19)
+    if (sm > em) {
+      if ((month === sm && day >= sd) || (month === em && day <= ed) || (month > sm) || (month < em)) {
+        return s;
+      }
+    } else {
+      if ((month === sm && day >= sd) || (month === em && day <= ed) || (month > sm && month < em)) {
+        return s;
+      }
+    }
+  }
+  return ZODIAC_SIGNS[0]; // fallback
+}
+
+function zodiacCompatibility(signA, signB) {
+  // Same element = excellent
+  if (signA.element === signB.element) {
+    return { level: 'excellent', text: '同元素（' + ZODIAC_ELEMENTS[signA.element] + '）',
+      detail: '同为' + ZODIAC_ELEMENTS[signA.element] + '星座，心有灵犀，思维模式相近，容易理解彼此的需求。' };
+  }
+
+  // Compatible elements: fire-air, earth-water
+  var compat = { fire: 'air', air: 'fire', earth: 'water', water: 'earth' };
+  if (compat[signA.element] === signB.element) {
+    return { level: 'good', text: '互补元素（' + ZODIAC_ELEMENTS[signA.element] + ' + ' + ZODIAC_ELEMENTS[signB.element] + '）',
+      detail: '元素互补，一个给予能量，一个提供滋养，彼此能擦出火花，是经典的匹配组合。' };
+  }
+
+  // Same quality = potential conflict or synergy
+  if (signA.quality === signB.quality) {
+    return { level: 'neutral', text: '同' + ZODIAC_QUALITIES[signA.quality],
+      detail: '同为' + ZODIAC_QUALITIES[signA.quality] + '，行事风格相似。可能互相理解，也可能因同样固执而产生摩擦。' };
+  }
+
+  return { level: 'neutral', text: '一般匹配',
+    detail: '两个星座元素和模式都不相同，需要更多时间去探索和适应彼此的差异。' };
+}
+
+// ==================== HELPERS ====================
+
+function countElements(bazi) {
+  var counts = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 };
+  for (var i = 0; i < 4; i++) {
+    counts[STEM_ELEMENTS[HEAVENLY_STEMS[bazi.stems[i]]]]++;
+    counts[BRANCH_ELEMENTS[EARTHLY_BRANCHES[bazi.branches[i]]]]++;
+  }
+  return counts;
+}
+
+function getDayMaster(bazi) {
+  return bazi.stems[2];
+}
+
+function getDayMasterElement(bazi) {
+  return STEM_ELEMENTS[HEAVENLY_STEMS[getDayMaster(bazi)]];
+}
+
+function getZodiac(bazi) {
+  return ZODIAC[bazi.branches[0]];
+}
+
+// ==================== SINGLE RESULT ====================
+
+function describeDayMaster(dayMaster, dayElement, elements, gender) {
+  var stem = HEAVENLY_STEMS[dayMaster];
+  var genderLabel = gender === 'male' ? '男命' : '女命';
+  var elementCN = { wood:'木', fire:'火', earth:'土', metal:'金', water:'水' };
+  var elem = elementCN[dayElement];
+  var main = stem + elem + '日主，' + genderLabel;
+
+  var dominant = '';
+  var maxCount = 0;
+  var total = 0;
+  for (var k in elements) {
+    total += elements[k];
+    if (elements[k] > maxCount) { maxCount = elements[k]; dominant = k; }
+  }
+  var dominantCN = { wood:'木', fire:'火', earth:'土', metal:'金', water:'水' };
+
+  var commentary = '';
+  var dmCount = elements[dayElement];
+
+  if (dmCount >= 3) {
+    commentary = '日主偏旺，五行中' + dominantCN[dominant] + '气最盛。命主个性鲜明，'
+      + (dayElement === 'wood' ? '仁慈正直，有进取心，但易固执己见。'
+        : dayElement === 'fire' ? '热情奔放，行动力强，但易冲动急躁。'
+        : dayElement === 'earth' ? '诚实稳重，包容大度，但易犹豫不决。'
+        : dayElement === 'metal' ? '刚毅果断，重义守信，但易刚愎自用。'
+        : '智慧深沉，善于变通，但易多愁善感。');
+  } else if (dmCount === 2) {
+    commentary = '日主中和，五行较为平衡。命主性格平和，适应力强，'
+      + '为人处世圆融通达，一生运势平稳发展。';
+  } else {
+    commentary = '日主偏弱，需以印比扶身。命主心思细腻，'
+      + (dayElement === 'wood' ? '温和柔韧，宜多借助外力发展。'
+        : dayElement === 'fire' ? '外冷内热，宜培养自信。'
+        : dayElement === 'earth' ? '勤恳踏实，宜主动争取机会。'
+        : dayElement === 'metal' ? '谨慎内敛，宜多与人合作。'
+        : '含蓄静默，宜多表达自我。');
+  }
+
+  var missing = [];
+  var allElem = ['wood','fire','earth','metal','water'];
+  for (var i = 0; i < allElem.length; i++) {
+    if (!elements[allElem[i]]) missing.push(dominantCN[allElem[i]]);
+  }
+  var missingNote = '';
+  if (missing.length > 0) {
+    missingNote = ' 八字中缺' + missing.join('、') + '，'
+      + '可在此方面多加培养或通过名字、配饰等补充。';
+  } else if (missing.length === 0) {
+    missingNote = ' 五行俱全，先天条件较为优越。';
+  }
+
+  return { main: main, commentary: commentary, missingNote: missingNote };
+}
+
+function renderSingleResult(bazi, name, gender, month, day) {
+  var elements = countElements(bazi);
+  var dayMaster = getDayMaster(bazi);
+  var dayElement = getDayMasterElement(bazi);
+  var chineseZodiac = getZodiac(bazi);
+  var desc = describeDayMaster(dayMaster, dayElement, elements, gender);
+  var zodiacSign = getZodiacSign(month, day);
+
+  var labelName = name || '命主';
+
+  var baziHTML = '<div class="bazi-table">';
+  for (var i = 0; i < 4; i++) {
+    baziHTML += '<div class="bazi-cell">'
+      + '<div class="pillar-label">' + PILLAR_NAMES[i] + '</div>'
+      + '<div class="stem">' + HEAVENLY_STEMS[bazi.stems[i]] + '</div>'
+      + '<div class="branch">' + EARTHLY_BRANCHES[bazi.branches[i]] + '</div>'
+      + '</div>';
+  }
+  baziHTML += '</div>';
+
+  var elementsCN = { wood:'木', fire:'火', earth:'土', metal:'金', water:'水' };
+  var colors = { wood:'wood-color', fire:'fire-color', earth:'earth-color', metal:'metal-color', water:'water-color' };
+  var wuxingHTML = '<div class="wuxing-bars">';
+  var allElem = ['wood','fire','earth','metal','water'];
+  for (var e = 0; e < allElem.length; e++) {
+    var elem = allElem[e];
+    var count = elements[elem] || 0;
+    var pct = Math.round(count / 8 * 100);
+    wuxingHTML += '<div class="wuxing-item">'
+      + '<div class="bar-label">' + elementsCN[elem] + '</div>'
+      + '<div class="bar-track"><div class="bar-fill ' + colors[elem] + '" style="height:' + pct + '%"></div></div>'
+      + '<div class="bar-count">' + count + '个</div>'
+      + '</div>';
+  }
+  wuxingHTML += '</div>';
+
+  var zodiacHTML = '<div class="zodiac-block">'
+    + '<div class="zodiac-icon">' + zodiacSign.emoji + '</div>'
+    + '<div class="zodiac-info">'
+    + '<div class="zodiac-name">' + zodiacSign.name + ' (' + zodiacSign.en + ')</div>'
+    + '<div class="zodiac-meta">'
+    + '<span class="zodiac-element-tag el-' + zodiacSign.element + '">' + ZODIAC_ELEMENTS[zodiacSign.element] + '</span>'
+    + '<span class="zodiac-element-tag el-' + zodiacSign.element + '" style="opacity:0.7">' + ZODIAC_QUALITIES[zodiacSign.quality] + '</span>'
+    + '</div>'
+    + '<div class="zodiac-trait">' + zodiacSign.trait + '</div>'
+    + '</div>'
+    + '</div>';
+
+  return '<div class="card">'
+    + '<div class="card-title">' + labelName + ' · 八字排盘</div>'
+    + baziHTML
+    + '<div class="card-title" style="margin-top:16px;">星座分析</div>'
+    + zodiacHTML
+    + '<div class="card-title" style="margin-top:16px;">五行分布</div>'
+    + wuxingHTML
+    + '<div class="analysis-block">'
+    + '<strong>生肖：</strong>' + chineseZodiac + '&nbsp;&nbsp;|&nbsp;&nbsp;'
+    + '<strong>日主：</strong>' + HEAVENLY_STEMS[dayMaster] + elementsCN[dayElement]
+    + '<br><br><strong>命理解读：</strong>' + desc.main + '。' + desc.commentary
+    + '<br>' + desc.missingNote
+    + '</div>'
+    + '</div>';
+}
+
+// ==================== MARRIAGE RESULT ====================
+
+// Zodiac compatibility based on earthly branches
+function zodiacMatch(branchA, branchB) {
+  // 六合 pairs
+  var liuhe = [
+    [0,1],[1,0],[2,11],[11,2],[3,10],[10,3],
+    [4,9],[9,4],[5,8],[8,5],[6,7],[7,6]
+  ];
+  // 三合 groups
+  var sanheGroups = [
+    [8,0,4],[0,4,8],[4,8,0],  // 申子辰
+    [11,3,7],[3,7,11],[7,11,3], // 亥卯未
+    [2,6,10],[6,10,2],[10,2,6], // 寅午戌
+    [9,5,1],[5,1,9],[1,9,5]     // 巳酉丑
+  ];
+  // 六冲 pairs
+  var liuchong = [
+    [0,6],[6,0],[1,7],[7,1],[2,8],[8,2],
+    [3,9],[9,3],[4,10],[10,4],[5,11],[11,5]
+  ];
+  // 相害 pairs
+  var xianghai = [
+    [0,7],[7,0],[1,6],[6,1],[2,5],[5,2],
+    [3,4],[4,3],[8,11],[11,8],[9,10],[10,9]
+  ];
+
+  for (var i = 0; i < liuhe.length; i++) {
+    if (liuhe[i][0] === branchA && liuhe[i][1] === branchB) return { level: 'best', text: '六合', detail: '生肖六合，天生绝配，互相吸引，缘分深厚。' };
+  }
+  for (var j = 0; j < sanheGroups.length; j++) {
+    if (sanheGroups[j][0] === branchA && sanheGroups[j][1] === branchB) return { level: 'good', text: '三合', detail: '生肖三合，志趣相投，相处融洽，互相扶持。' };
+  }
+  for (var k = 0; k < liuchong.length; k++) {
+    if (liuchong[k][0] === branchA && liuchong[k][1] === branchB) return { level: 'bad', text: '六冲', detail: '生肖六冲，性格相冲，意见常有分歧，需要更多包容与理解。' };
+  }
+  for (var l = 0; l < xianghai.length; l++) {
+    if (xianghai[l][0] === branchA && xianghai[l][1] === branchB) return { level: 'bad', text: '相害', detail: '生肖相害，易生误会与摩擦，需多加沟通，避免猜疑。' };
+  }
+  return { level: 'neutral', text: '平', detail: '生肖无冲无合，属于普通配对，能否长久在于双方经营。' };
+}
+
+// Day stem 五合
+function dayStemMatch(stemA, stemB) {
+  var hePairs = [[0,5],[1,6],[2,7],[3,8],[4,9],[5,0],[6,1],[7,2],[8,3],[9,4]];
+  for (var i = 0; i < hePairs.length; i++) {
+    if (hePairs[i][0] === stemA && hePairs[i][1] === stemB) {
+      var elements = ['土','金','水','木','火'];
+      return { match: true, element: elements[Math.floor(stemA / 2)] };
+    }
+  }
+  return { match: false };
+}
+
+// Count branch relationships between two people's four pillars
+function countBranchRelations(branchesA, branchesB) {
+  var liuhePairs = [[0,1],[2,11],[3,10],[4,9],[5,8],[6,7]];
+  var liuchongPairs = [[0,6],[1,7],[2,8],[3,9],[4,10],[5,11]];
+  var sanheGroups = [[0,4,8],[2,6,10],[1,5,9],[3,7,11]];
+
+  // Count 六合 and 六冲 between A's and B's branches
+  var he = 0, chong = 0;
+  for (var i = 0; i < 4; i++) {
+    for (var j = 0; j < 4; j++) {
+      var pair = [branchesA[i], branchesB[j]].sort(function(a,b){return a-b;});
+      for (var k = 0; k < liuhePairs.length; k++) {
+        if (pair[0] === liuhePairs[k][0] && pair[1] === liuhePairs[k][1]) he++;
+      }
+      for (var l = 0; l < liuchongPairs.length; l++) {
+        if (pair[0] === liuchongPairs[l][0] && pair[1] === liuchongPairs[l][1]) chong++;
+      }
+    }
+  }
+
+  // Count 三合: collect all unique branches from both people
+  var allBranches = [];
+  for (var m = 0; m < 4; m++) {
+    if (allBranches.indexOf(branchesA[m]) < 0) allBranches.push(branchesA[m]);
+    if (allBranches.indexOf(branchesB[m]) < 0) allBranches.push(branchesB[m]);
+  }
+
+  var sanhe = 0;
+  for (var n = 0; n < sanheGroups.length; n++) {
+    var group = sanheGroups[n];
+    var found = true;
+    for (var o = 0; o < 3; o++) {
+      if (allBranches.indexOf(group[o]) < 0) { found = false; break; }
+    }
+    if (found) sanhe++;
+  }
+
+  return { he: he, chong: chong, sanhe: sanhe };
+}
+
+function renderMarriageResult(baziA, baziB, nameA, nameB, monthA, dayA, monthB, dayB) {
+  var labelA = nameA || '甲方';
+  var labelB = nameB || '乙方';
+
+  // Zodiac sign match
+  var signA = getZodiacSign(monthA, dayA);
+  var signB = getZodiacSign(monthB, dayB);
+  var signCompat = zodiacCompatibility(signA, signB);
+
+  // Chinese zodiac match
+  var zodiacR = zodiacMatch(baziA.branches[0], baziB.branches[0]);
+
+  // Day stem match
+  var stemR = dayStemMatch(baziA.stems[2], baziB.stems[2]);
+
+  // Branch relations
+  var branchR = countBranchRelations(baziA.branches, baziB.branches);
+
+  // Five elements complement
+  var elemA = countElements(baziA);
+  var elemB = countElements(baziB);
+  var complementScore = 0;
+  var allElem = ['wood','fire','earth','metal','water'];
+  var elemCN = { wood:'木', fire:'火', earth:'土', metal:'金', water:'水' };
+  var generating = { water:'wood', wood:'fire', fire:'earth', earth:'metal', metal:'water' };
+
+  var missingA = [], missingB = [];
+  for (var i = 0; i < allElem.length; i++) {
+    if (!elemA[allElem[i]]) missingA.push(elemCN[allElem[i]]);
+    if (!elemB[allElem[i]]) missingB.push(elemCN[allElem[i]]);
+    // Check if B complements A's weakness
+    if (elemA[allElem[i]] <= 1 && elemB[allElem[i]] >= 3) complementScore += 2;
+    if (elemB[allElem[i]] <= 1 && elemA[allElem[i]] >= 3) complementScore += 2;
+    // Generation cycle complement
+    if (generating[allElem[i]] && elemA[generating[allElem[i]]] >= 2 && elemB[allElem[i]] >= 2) complementScore += 1;
+  }
+
+  // Overall score
+  var score = 50;
+  if (zodiacR.level === 'best') score += 15;
+  else if (zodiacR.level === 'good') score += 10;
+  else if (zodiacR.level === 'bad') score -= 12;
+
+  // Zodiac sign compatibility
+  if (signCompat.level === 'excellent') score += 8;
+  else if (signCompat.level === 'good') score += 5;
+
+  if (stemR.match) score += 12;
+  score += branchR.he * 3;
+  score -= branchR.chong * 4;
+  score += branchR.sanhe * 5;
+  score += complementScore * 2;
+
+  score = Math.max(5, Math.min(98, Math.round(score)));
+
+  var grade;
+  if (score >= 90) grade = '天作之合';
+  else if (score >= 78) grade = '佳偶天成';
+  else if (score >= 65) grade = '情投意合';
+  else if (score >= 50) grade = '平平淡淡';
+  else if (score >= 35) grade = '磕磕绊绊';
+  else grade = '有缘无分';
+
+  var gradeDesc = {
+    '天作之合': '二人八字极为匹配，如天造地设，缘分深厚。彼此相互吸引、相互成就，婚配极为理想。',
+    '佳偶天成': '八字相合程度很高，有良好的感情基础，婚后能互相扶持，共建美满家庭。',
+    '情投意合': '有一定的契合度，彼此能产生好感与默契，但需在相处中多加磨合与体谅。',
+    '平平淡淡': '八字无大冲也无大合，感情如细水长流，平凡中见真章，能否幸福在于双方用心经营。',
+    '磕磕绊绊': '八字存在一些不合之处，相处中易有摩擦和分歧，需双方更多的包容、理解和迁就。',
+    '有缘无分': '八字冲克较多，个性与价值观差异较大，在一起较为辛苦。若已在一起，建议多沟通，各退一步。'
+  };
+
+  // Build result HTML
+  var html = '<div class="card">'
+    + '<div class="card-title">' + labelA + ' &#x2764; ' + labelB + ' · 合婚分析</div>';
+
+  // Score
+  html += '<div class="score-circle">'
+    + '<div class="score-num">' + score + '</div>'
+    + '<div class="score-label">' + grade + '</div>'
+    + '</div>';
+
+  html += '<p style="text-align:center;margin-bottom:16px;line-height:1.8;">' + gradeDesc[grade] + '</p>';
+
+  // Detail grid
+  html += '<div class="comp-grid">';
+  html += '<div class="comp-item"><span class="comp-label">生肖配对</span><span class="comp-'
+    + (zodiacR.level === 'best' || zodiacR.level === 'good' ? 'good' : zodiacR.level === 'bad' ? 'bad' : 'neutral')
+    + '">' + zodiacR.text + '（' + ZODIAC[baziA.branches[0]] + ' & ' + ZODIAC[baziB.branches[0]] + '）</span></div>';
+
+  html += '<div class="comp-item"><span class="comp-label">星座配对</span><span class="comp-'
+    + (signCompat.level === 'excellent' || signCompat.level === 'good' ? 'good' : 'neutral')
+    + '">' + signCompat.text + '（' + signA.emoji + ' & ' + signB.emoji + '）</span></div>';
+
+  html += '<div class="comp-item"><span class="comp-label">日干五合</span><span class="comp-'
+    + (stemR.match ? 'good' : 'neutral')
+    + '">' + (stemR.match ? '有合（合化' + stemR.element + '）感情深厚' : '无合，需多培养感情默契') + '</span></div>';
+
+  html += '<div class="comp-item"><span class="comp-label">地支六合数</span><span class="comp-'
+    + (branchR.he >= 2 ? 'good' : 'neutral') + '">' + branchR.he + ' 对' + (branchR.he >= 2 ? '（多有默契）' : '') + '</span></div>';
+
+  html += '<div class="comp-item"><span class="comp-label">地支六冲数</span><span class="comp-'
+    + (branchR.chong >= 1 ? 'bad' : 'good') + '">' + branchR.chong + ' 对' + (branchR.chong >= 1 ? '（需防口角）' : '') + '</span></div>';
+
+  html += '<div class="comp-item"><span class="comp-label">地支三合数</span><span class="comp-'
+    + (branchR.sanhe >= 2 ? 'good' : 'neutral') + '">' + branchR.sanhe + ' 组' + (branchR.sanhe >= 2 ? '（目标一致）' : '') + '</span></div>';
+
+  html += '<div class="comp-item"><span class="comp-label">五行互补</span><span class="comp-'
+    + (complementScore >= 4 ? 'good' : 'neutral') + '">'
+    + (complementScore >= 6 ? '高度互补' : complementScore >= 3 ? '有一定互补' : '互补较弱')
+    + '</span></div>';
+  html += '</div>';
+
+  // Detailed analysis
+  html += '<div class="comp-detail">'
+    + '<strong>星座分析：</strong>' + signA.name + ' ' + signA.emoji + ' & ' + signB.name + ' ' + signB.emoji + '——' + signCompat.detail + '<br>'
+    + '<strong>生肖分析：</strong>' + zodiacR.detail + '<br>'
+    + '<strong>日干分析：</strong>' + HEAVENLY_STEMS[baziA.stems[2]] + HEAVENLY_STEMS[baziB.stems[2]] + '——'
+    + (stemR.match ? '天干五合，二人心意相通，有天然的吸引力与默契。' : '天干无合，感情需要更多时间的培养与磨合。') + '<br>'
+    + '<strong>地支关系：</strong>' + branchR.he + '合 ' + branchR.chong + '冲 ' + branchR.sanhe + '三合。';
+
+  if (branchR.chong >= 1) {
+    html += '存在相冲关系，日常相处中可能会在性格和观念上产生碰撞，建议多换位思考。';
+  }
+  if (branchR.he >= 2) {
+    html += '合多则感情融洽，彼此容易达成共识。';
+  }
+  html += '<br>';
+
+  // Missing elements
+  if (missingA.length > 0) html += '<strong>' + labelA + '缺：</strong>' + missingA.join('、') + '；';
+  if (missingB.length > 0) html += '<strong>' + labelB + '缺：</strong>' + missingB.join('、') + '；';
+  if (missingA.length > 0 || missingB.length > 0) {
+    html += '双方可在生活中互相弥补，取长补短。<br>';
+  }
+
+  html += '</div>';
+
+  // Side-by-side BaZi
+  html += '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;">';
+  html += '<div style="flex:1;min-width:250px;">';
+  html += '<div style="text-align:center;color:var(--accent);font-size:0.9em;letter-spacing:0.05em;margin-bottom:6px;">' + labelA + ' 八字</div>';
+  html += '<div class="bazi-table" style="grid-template-columns: repeat(4, 1fr); gap: 4px;">';
+  for (var pi = 0; pi < 4; pi++) {
+    html += '<div class="bazi-cell"><div class="pillar-label">' + PILLAR_NAMES[pi] + '</div>'
+      + '<div class="stem">' + HEAVENLY_STEMS[baziA.stems[pi]] + '</div>'
+      + '<div class="branch">' + EARTHLY_BRANCHES[baziA.branches[pi]] + '</div></div>';
+  }
+  html += '</div></div>';
+
+  html += '<div style="flex:1;min-width:250px;">';
+  html += '<div style="text-align:center;color:var(--accent);font-size:0.9em;letter-spacing:0.05em;margin-bottom:6px;">' + labelB + ' 八字</div>';
+  html += '<div class="bazi-table" style="grid-template-columns: repeat(4, 1fr); gap: 4px;">';
+  for (var pj = 0; pj < 4; pj++) {
+    html += '<div class="bazi-cell"><div class="pillar-label">' + PILLAR_NAMES[pj] + '</div>'
+      + '<div class="stem">' + HEAVENLY_STEMS[baziB.stems[pj]] + '</div>'
+      + '<div class="branch">' + EARTHLY_BRANCHES[baziB.branches[pj]] + '</div></div>';
+  }
+  html += '</div></div>';
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+// ==================== MAIN HANDLERS ====================
+
+function calcSingle() {
+  var name = document.getElementById('s-name').value.trim();
+  var year = parseInt(document.getElementById('s-year').value);
+  var month = parseInt(document.getElementById('s-month').value);
+  var day = parseInt(document.getElementById('s-day').value);
+  var hour = parseInt(document.getElementById('s-hour').value);
+  var gender = document.getElementById('s-gender').value;
+
+  var bazi = calculateBaZi(year, month, day, hour);
+  var html = renderSingleResult(bazi, name, gender, month, day);
+
+  var area = document.getElementById('result-area');
+  area.innerHTML = html;
+  area.style.display = '';
+  area.scrollIntoView({ behavior: 'smooth' });
+}
+
+function calcMarriage() {
+  var nameA = document.getElementById('ma-name').value.trim();
+  var yearA = parseInt(document.getElementById('ma-year').value);
+  var monthA = parseInt(document.getElementById('ma-month').value);
+  var dayA = parseInt(document.getElementById('ma-day').value);
+  var hourA = parseInt(document.getElementById('ma-hour').value);
+
+  var nameB = document.getElementById('mb-name').value.trim();
+  var yearB = parseInt(document.getElementById('mb-year').value);
+  var monthB = parseInt(document.getElementById('mb-month').value);
+  var dayB = parseInt(document.getElementById('mb-day').value);
+  var hourB = parseInt(document.getElementById('mb-hour').value);
+
+  var baziA = calculateBaZi(yearA, monthA, dayA, hourA);
+  var baziB = calculateBaZi(yearB, monthB, dayB, hourB);
+
+  var html = renderMarriageResult(baziA, baziB, nameA, nameB, monthA, dayA, monthB, dayB);
+
+  var area = document.getElementById('result-area');
+  area.innerHTML = html;
+  area.style.display = '';
+  area.scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
