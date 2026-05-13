@@ -1203,44 +1203,69 @@ function renderMarriageResult(baziA, baziB, nameA, nameB, monthA, dayA, monthB, 
 // ==================== MAIN HANDLERS ====================
 
 function calcSingle() {
-  var name = document.getElementById('s-name').value.trim();
-  var year = parseInt(document.getElementById('s-year').value);
-  var month = parseInt(document.getElementById('s-month').value);
-  var day = parseInt(document.getElementById('s-day').value);
-  var hour = parseInt(document.getElementById('s-hour').value);
-  var gender = document.getElementById('s-gender').value;
+  try {
+    var name = document.getElementById('s-name').value.trim();
+    var year = parseInt(document.getElementById('s-year').value);
+    var month = parseInt(document.getElementById('s-month').value);
+    var day = parseInt(document.getElementById('s-day').value);
+    var hour = parseInt(document.getElementById('s-hour').value);
+    var gender = document.getElementById('s-gender').value;
 
-  var bazi = calculateBaZi(year, month, day, hour);
-  var html = renderSingleResult(bazi, name, gender, month, day);
+    if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hour)) {
+      throw new Error('请完整填写出生年月日时');
+    }
 
-  var area = document.getElementById('result-area');
-  area.innerHTML = html;
-  area.style.display = '';
-  area.scrollIntoView({ behavior: 'smooth' });
+    var bazi = calculateBaZi(year, month, day, hour);
+    var html = renderSingleResult(bazi, name, gender, month, day);
+
+    var area = document.getElementById('result-area');
+    area.innerHTML = html;
+    area.style.display = '';
+    area.scrollIntoView({ behavior: 'smooth' });
+  } catch (e) {
+    var area = document.getElementById('result-area');
+    area.innerHTML = '<div class="card" style="color:#C0392B;text-align:center;padding:20px;">'
+      + '<strong>出错了：</strong>' + e.message + '<br><br>'
+      + '<small>请确保所有选项都已选择，然后重试。</small></div>';
+    area.style.display = '';
+  }
 }
 
 function calcMarriage() {
-  var nameA = document.getElementById('ma-name').value.trim();
-  var yearA = parseInt(document.getElementById('ma-year').value);
-  var monthA = parseInt(document.getElementById('ma-month').value);
-  var dayA = parseInt(document.getElementById('ma-day').value);
-  var hourA = parseInt(document.getElementById('ma-hour').value);
+  try {
+    var nameA = document.getElementById('ma-name').value.trim();
+    var yearA = parseInt(document.getElementById('ma-year').value);
+    var monthA = parseInt(document.getElementById('ma-month').value);
+    var dayA = parseInt(document.getElementById('ma-day').value);
+    var hourA = parseInt(document.getElementById('ma-hour').value);
 
-  var nameB = document.getElementById('mb-name').value.trim();
-  var yearB = parseInt(document.getElementById('mb-year').value);
-  var monthB = parseInt(document.getElementById('mb-month').value);
-  var dayB = parseInt(document.getElementById('mb-day').value);
-  var hourB = parseInt(document.getElementById('mb-hour').value);
+    var nameB = document.getElementById('mb-name').value.trim();
+    var yearB = parseInt(document.getElementById('mb-year').value);
+    var monthB = parseInt(document.getElementById('mb-month').value);
+    var dayB = parseInt(document.getElementById('mb-day').value);
+    var hourB = parseInt(document.getElementById('mb-hour').value);
 
-  var baziA = calculateBaZi(yearA, monthA, dayA, hourA);
-  var baziB = calculateBaZi(yearB, monthB, dayB, hourB);
+    if (isNaN(yearA) || isNaN(monthA) || isNaN(dayA) || isNaN(hourA)
+        || isNaN(yearB) || isNaN(monthB) || isNaN(dayB) || isNaN(hourB)) {
+      throw new Error('请完整填写双方的出生年月日时');
+    }
 
-  var html = renderMarriageResult(baziA, baziB, nameA, nameB, monthA, dayA, monthB, dayB);
+    var baziA = calculateBaZi(yearA, monthA, dayA, hourA);
+    var baziB = calculateBaZi(yearB, monthB, dayB, hourB);
 
-  var area = document.getElementById('result-area');
-  area.innerHTML = html;
-  area.style.display = '';
-  area.scrollIntoView({ behavior: 'smooth' });
+    var html = renderMarriageResult(baziA, baziB, nameA, nameB, monthA, dayA, monthB, dayB);
+
+    var area = document.getElementById('result-area');
+    area.innerHTML = html;
+    area.style.display = '';
+    area.scrollIntoView({ behavior: 'smooth' });
+  } catch (e) {
+    var area = document.getElementById('result-area');
+    area.innerHTML = '<div class="card" style="color:#C0392B;text-align:center;padding:20px;">'
+      + '<strong>出错了：</strong>' + e.message + '<br><br>'
+      + '<small>请确保所有选项都已选择，然后重试。</small></div>';
+    area.style.display = '';
+  }
 }
 </script>
 </body>
