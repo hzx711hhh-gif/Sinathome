@@ -475,7 +475,7 @@
           <option value="female">女</option>
         </select>
       </div>
-      <button class="btn-submit" onclick="calcSingle()">排 盘</button>
+      <button type="button" class="btn-submit" onclick="calcSingle()">排 盘</button>
     </div>
   </div>
 
@@ -510,7 +510,7 @@
       </div>
     </div>
     <div style="text-align:center;margin-top:18px;">
-      <button class="btn-submit" onclick="calcMarriage()">合 婚 分 析</button>
+      <button type="button" class="btn-submit" onclick="calcMarriage()">合 婚 分 析</button>
     </div>
   </div>
 
@@ -653,7 +653,7 @@ function initAllSelects() {
   });
 }
 
-// Init selects and attach day update events (script is at end of body, DOM is ready)
+// Init selects and attach day update events
 initAllSelects();
 document.getElementById('s-year').addEventListener('change', function() { updateDaySelect('s'); });
 document.getElementById('s-month').addEventListener('change', function() { updateDaySelect('s'); });
@@ -661,6 +661,13 @@ document.getElementById('ma-year').addEventListener('change', function() { updat
 document.getElementById('ma-month').addEventListener('change', function() { updateDaySelect('ma'); });
 document.getElementById('mb-year').addEventListener('change', function() { updateDaySelect('mb'); });
 document.getElementById('mb-month').addEventListener('change', function() { updateDaySelect('mb'); });
+
+// Diagnostic: verify init completed
+console.log('八字排盘页面初始化完成');
+console.log('s-year 选项数:', document.getElementById('s-year').options.length);
+console.log('s-month 选项数:', document.getElementById('s-month').options.length);
+console.log('s-day 选项数:', document.getElementById('s-day').options.length);
+console.log('s-hour 选项数:', document.getElementById('s-hour').options.length);
 
 // ==================== MODE SWITCH ====================
 
