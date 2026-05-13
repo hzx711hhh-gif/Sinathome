@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta charset="UTF-8"><title>测试页</title></head>
+<body>
+<h1>JavaScript 测试</h1>
+<button id="btn">点我测试</button>
+<div id="result"></div>
+<script>
+document.getElementById('btn').addEventListener('click', function() {
+  document.getElementById('result').innerHTML = '<p style="color:green">JS 运行正常！当前时间：' + new Date().toLocaleString() + '</p>';
+});
+document.getElementById('result').innerHTML = '<p>页面加载完成，请点击按钮</p>';
+</script>
+</body>
+</html>
